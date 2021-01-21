@@ -1,13 +1,13 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import TopClubs from './../screens/TopClubs'
+import Clubs from '../../screens/Clubs';
 
 const Stack = createStackNavigator();
 
-export default function TopClubsStack(){
+export default function ClubsStack(){
     return (
         <Stack.Navigator>
-            <Stack.Screen name="topClubs" component={TopClubs} options={{title: "Top Clubs"}}/>
+            <Stack.Screen name="clubs" component={Clubs} options={{title: "Clubs"}}/>
         </Stack.Navigator>
     )
 }
