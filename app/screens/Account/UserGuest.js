@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 import React from "react";
 import { StyleSheet, View, ScrollView, Text, Image } from "react-native";
 import { Button } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 
 export default function UserGuest() {
-  const navigation = useNavigation();
+  const {navigate}= useNavigation();
 
   return (
     <ScrollView centerContent={true} style={styles.viewBody}>
@@ -27,7 +28,7 @@ export default function UserGuest() {
           title="Sign In"
           buttonStyle={styles.btnStyle}
           containerStyle={styles.btnContainer}
-          onPress={() => navigation.navigate("login")}
+          onPress={() => navigate("login")}
         />
       </View>
     </ScrollView>
