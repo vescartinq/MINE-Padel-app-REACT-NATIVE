@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
       borderColor: "#00a680",
       borderWidth: 2,
       borderRadius: 10,
+      alignItems: "center",
     },
     view: {
       flex: 1,
