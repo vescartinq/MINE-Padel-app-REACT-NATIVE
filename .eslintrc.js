@@ -18,6 +18,7 @@ module.exports = {
         "react"
     ],
     "rules": {
-        "no-debugger":1
+        "no-debugger":1,
+        "react/prop-types": "off"
     }
 };
