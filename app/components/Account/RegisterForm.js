@@ -1,17 +1,61 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
+import Loading from "../Loading";
+import { validateEmail } from "../../utils/validation";
+import { size, isEmpty } from "lodash";
+import * as firebase from "firebase";
+import { useNavigation } from "@react-navigation/native";
 
-export default function RegisterForm(props) {
+export default function RegisterForm({ toastRef }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+    const [formData, setFormData] = useState(defaultFormValue());
+    const [loading, setLoading] = useState(false);
 
+    const navigation = useNavigation();
+    
+    const onSubmit=()=>{
+      if (
+        isEmpty(formData.email) ||
+        isEmpty(formData.password) ||
+        isEmpty(formData.repeatPassword)
+      ){
+        toastRef.current.show('Please fill all fields');
+      } else if (!validateEmail(formData.email)) {
+        toastRef.current.show("Email address is incomplete");
+      } else if (formData.password !== formData.repeatPassword) {
+        toastRef.current.show("Passwords don't match");
+      } else if (size(formData.password) < 6) {
+        toastRef.current.show(
+          "The password have to be minimum 6 characters long"
+        );
+      } else {
+        setLoading(true);
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(formData.email, formData.password)
+        .then(() => {
+          setLoading(false);
+          navigation.navigate("account");
+        })
+        .catch(() => {
+          setLoading(false);
+          toastRef.current.show("This email is already in use, please use other account");
+        });
+      }
+    }
+
+    const onChange = (e, type) => {
+      setFormData({ ...formData, [type]: e.nativeEvent.text });
+    };
     
   return (
     <View style={styles.formContainer}>
       <Input
         placeholder="Enter your email address"
         containerStyle={styles.inputForm}
+        onChange={(e) => onChange(e, "email")}
         rightIcon={
           <Icon
             type="material-community"
@@ -25,6 +69,7 @@ export default function RegisterForm(props) {
         containerStyle={styles.inputForm}
         password={true}
         secureTextEntry={showPassword ? false : true}
+        onChange={(e) => onChange(e, "password")}
         rightIcon={
             <Icon
               type="material-community"
@@ -39,6 +84,7 @@ export default function RegisterForm(props) {
         containerStyle={styles.inputForm}
         password={true}
         secureTextEntry={showRepeatPassword ? false : true}
+        onChange={(e) => onChange(e, "repeatPassword")}
         rightIcon={
             <Icon
               type="material-community"
@@ -52,9 +98,19 @@ export default function RegisterForm(props) {
         title="Join"
         containerStyle={styles.btnContainerRegister}
         buttonStyle={styles.btnRegister}
+        onPress={onSubmit}
       />
+      <Loading isVisible={loading} text="Wait a moment, please" />
     </View>
   );
+}
+
+function defaultFormValue() {
+  return {
+    email: "",
+    password: "",
+    repeatPassword: "",
+  };
 }
 
 const styles = StyleSheet.create({
