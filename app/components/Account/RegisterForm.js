@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
+import { validateEmail } from "../../utils/validation";
 
 export default function RegisterForm(props) {
     const [showPassword, setShowPassword] = useState(false);
@@ -9,6 +10,8 @@ export default function RegisterForm(props) {
     
     const onSubmit=()=>{
       console.log(formData);
+
+      console.log(validateEmail(formData.email))
     }
 
     const onChange = (e, type) => {
