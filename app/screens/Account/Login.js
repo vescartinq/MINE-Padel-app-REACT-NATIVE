@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useRef } from "react";
 import { StyleSheet, View, ScrollView, Text, Image } from "react-native";
 import { Divider } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-easy-toast";
+import LoginForm from "../../components/Account/LoginForm";
+// import LoginFacebook from "../../components/Account/LoginFacebook";
 
 export default function Login() {
+  const toastRef = useRef();
+
   return (
     <ScrollView>
       <Image
@@ -12,28 +17,29 @@ export default function Login() {
         style={styles.logo}
       />
       <View style={styles.viewContainer}>
-        <Text>Login Form</Text>
+        <LoginForm toastRef={toastRef} />
         <CreateAccount />
       </View>
       <Divider style={styles.divider} />
       <View style={styles.viewContainer}>
-        <Text>LoginFacebook</Text>
+        {/* <LoginFacebook toastRef={toastRef} /> */}
       </View>
+      <Toast ref={toastRef} position="center" opacity={0.9} />
     </ScrollView>
   );
 }
 
 function CreateAccount() {
-  const {navigate} = useNavigation();
+  const navigation = useNavigation();
 
   return (
     <Text style={styles.textRegister}>
       ¿New User?{" "}
       <Text
         style={styles.btnRegister}
-        onPress={() => navigate("register")}
+        onPress={() => navigation.navigate("register")}
       >
-        Create your Account
+        Create your account
       </Text>
     </Text>
   );
