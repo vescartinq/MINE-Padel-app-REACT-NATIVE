@@ -84,7 +84,7 @@ export default function ChangeEmailForm(props) {
         errorMessage={errors.password}
       />
       <Button
-        title="Cambiar email"
+        title="Change email"
         containerStyle={styles.btnContainer}
         buttonStyle={styles.btn}
         onPress={onSubmit}

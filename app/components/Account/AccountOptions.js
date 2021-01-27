@@ -83,7 +83,7 @@ export default function AccountOptions(props) {
 function generateOptions(selectedComponent) {
   return [
     {
-      title: "Cambiar Nombre y Apellidos",
+      title: "Change user name",
       iconType: "material-community",
       iconNameLeft: "account-circle",
       iconColorLeft: "#ccc",
@@ -92,7 +92,7 @@ function generateOptions(selectedComponent) {
       onPress: () => selectedComponent("displayName"),
     },
     {
-      title: "Cambiar Email",
+      title: "Change email",
       iconType: "material-community",
       iconNameLeft: "at",
       iconColorLeft: "#ccc",
@@ -101,7 +101,7 @@ function generateOptions(selectedComponent) {
       onPress: () => selectedComponent("email"),
     },
     {
-      title: "Cambiar contraseña",
+      title: "Change password",
       iconType: "material-community",
       iconNameLeft: "lock-reset",
       iconColorLeft: "#ccc",

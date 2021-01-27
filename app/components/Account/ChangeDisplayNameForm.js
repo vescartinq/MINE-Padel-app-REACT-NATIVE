@@ -12,9 +12,9 @@ export default function ChangeDisplayNameForm(props) {
   const onSubmit = () => {
     setError(null);
     if (!newDisplayName) {
-      setError("El nombre no puede estar vacio.");
+      setError("Please, introduce a user name.");
     } else if (displayName === newDisplayName) {
-      setError("El nombre no puede ser igual al actual.");
+      setError("Please, enter a different user name");
     } else {
       setIsLoading(true);
       const update = {
@@ -29,7 +29,7 @@ export default function ChangeDisplayNameForm(props) {
           setShowModal(false);
         })
         .catch(() => {
-          setError("Error al actualizar el nombre.");
+          setError("Error updating name");
           setIsLoading(false);
         });
     }
@@ -38,7 +38,7 @@ export default function ChangeDisplayNameForm(props) {
   return (
     <View style={styles.view}>
       <Input
-        placeholder="Nombre y apellidos"
+        placeholder="Name and surname"
         containerStyle={styles.input}
         rightIcon={{
           type: "material-community",
@@ -50,7 +50,7 @@ export default function ChangeDisplayNameForm(props) {
         errorMessage={error}
       />
       <Button
-        title="Cambiar nombre"
+        title="Change user name"
         containerStyle={styles.btnContainer}
         buttonStyle={styles.btn}
         onPress={onSubmit}
