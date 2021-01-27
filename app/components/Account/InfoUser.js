@@ -1,74 +1,72 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Avatar } from "react-native-elements";
-// import * as firebase from "firebase";
-// import * as Permissions from "expo-permissions";
-// import * as ImagePicker from "expo-image-picker";
+import * as firebase from "firebase";
+import * as Permissions from "expo-permissions";
+import * as ImagePicker from "expo-image-picker";
 
 export default function InfoUser(props) {
   const {
     userInfo: { uid, photoURL, displayName, email },
-    //     toastRef,
-    //     setLoading,
-    //     setLoadingText,
+        toastRef,
+        setLoading,
+        setLoadingText,
   } = props;
 
-  //   const changeAvatar = async () => {
-  //     const resultPermission = await Permissions.askAsync(
-  //       Permissions.CAMERA_ROLL
-  //     );
-  //     const resultPermissionCamera =
-  //       resultPermission.permissions.cameraRoll.status;
+    const changeAvatar = async () => {
+      const resultPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      const resultPermissionCamera =
+        resultPermission.permissions.cameraRoll.status;
 
-  //     if (resultPermissionCamera === "denied") {
-  //       toastRef.current.show("Es necesario aceptar los permisos de la galeria");
-  //     } else {
-  //       const result = await ImagePicker.launchImageLibraryAsync({
-  //         allowsEditing: true,
-  //         aspect: [4, 3],
-  //       });
+      if (resultPermissionCamera === "denied") {
+        toastRef.current.show("Please, allow access to photos, media and files on your device");
+      } else {
+        const result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          aspect: [4, 3],
+        });
 
-  //       if (result.cancelled) {
-  //         toastRef.current.show("Has cerrado la seleccion de imagenes");
-  //       } else {
-  //         uploadImage(result.uri)
-  //           .then(() => {
-  //             updatePhotoUrl();
-  //           })
-  //           .catch(() => {
-  //             toastRef.current.show("Error al actualizar el avatar.");
-  //           });
-  //       }
-  //     }
-  //   };
+        if (result.cancelled) {
+          toastRef.current.show("Undo image selection");
+        } else {
+          uploadImage(result.uri)
+            .then(() => {
+              updatePhotoUrl();
+            })
+            .catch(() => {
+              toastRef.current.show("Failed to update image");
+            });
+        }
+      }
+    };
 
-  //   const uploadImage = async (uri) => {
-  //     setLoadingText("Actualizando Avatar");
-  //     setLoading(true);
+    const uploadImage = async (uri) => {
+      setLoadingText("Updating Avatar");
+      setLoading(true);
 
-  //     const response = await fetch(uri);
-  //     const blob = await response.blob();
+      const response = await fetch(uri);
+      const blob = await response.blob();
 
-  //     const ref = firebase.storage().ref().child(`avatar/${uid}`);
-  //     return ref.put(blob);
-  //   };
+      const ref = firebase.storage().ref().child(`avatar/${uid}`);
+      return ref.put(blob);
+    };
 
-  //   const updatePhotoUrl = () => {
-  //     firebase
-  //       .storage()
-  //       .ref(`avatar/${uid}`)
-  //       .getDownloadURL()
-  //       .then(async (response) => {
-  //         const update = {
-  //           photoURL: response,
-  //         };
-  //         await firebase.auth().currentUser.updateProfile(update);
-  //         setLoading(false);
-  //       })
-  //       .catch(() => {
-  //         toastRef.current.show("Error al actualizar el avatar.");
-  //       });
-  //   };
+    const updatePhotoUrl = () => {
+      firebase
+        .storage()
+        .ref(`avatar/${uid}`)
+        .getDownloadURL()
+        .then(async (response) => {
+          const update = {
+            photoURL: response,
+          };
+          await firebase.auth().currentUser.updateProfile(update);
+          setLoading(false);
+        })
+        .catch(() => {
+          toastRef.current.show("Error updating avatar.");
+        });
+    };
 
   return (
     <View style={styles.viewUserInfo}>
@@ -76,7 +74,7 @@ export default function InfoUser(props) {
         rounded
         size="large"
         showEditButton
-        //  onEditPress={changeAvatar}
+         onEditPress={changeAvatar}
         containerStyle={styles.userInfoAvatar}
         source={
           photoURL
