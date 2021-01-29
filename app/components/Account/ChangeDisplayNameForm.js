@@ -4,8 +4,8 @@ import { Input, Button } from "react-native-elements";
 import * as firebase from "firebase";
 
 export default function ChangeDisplayNameForm(props) {
-  const { displayName, setShowModal, toastRef, setRealoadUserInfo } = props;
-  const [newDisplayName, setNewDisplayName] = useState(null);
+  const { displayName, setShowModal, toastRef, setReloadUserInfo } = props;
+  const [newDisplayName, setNewDisplayName] = useState(displayName);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -13,20 +13,20 @@ export default function ChangeDisplayNameForm(props) {
     setError(null);
     if (!newDisplayName) {
       setError("Please, introduce a user name.");
-    } else if (displayName === newDisplayName) {
+    } else if (displayName === newDisplayName.trim()) {
       setError("Please, enter a different user name");
     } else {
       setIsLoading(true);
       const update = {
-        displayName: newDisplayName,
+        displayName: newDisplayName.trim(),
       };
       firebase
         .auth()
         .currentUser.updateProfile(update)
         .then(() => {
           setIsLoading(false);
-          setRealoadUserInfo(true);
           setShowModal(false);
+          setReloadUserInfo(true);
         })
         .catch(() => {
           setError("Error updating name");

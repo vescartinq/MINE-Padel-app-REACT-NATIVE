@@ -31,21 +31,21 @@ export default function ChangePasswordForm(props) {
           ? "Password can´t be empty"
           : "",
         newPassword: !formData.newPassword
-          ? "La contraseña no puede estar vacia."
+          ? "New password can´t be empty"
           : "",
         repeatNewPassword: !formData.repeatNewPassword
-          ? "La contraseña no puede estar vacia."
+          ? "Confirm password can´t be empty"
           : "",
       };
     } else if (formData.newPassword !== formData.repeatNewPassword) {
       errorsTemp = {
-        newPassword: "Las contraseñas no son iguales",
-        repeatNewPassword: "Las contraseñas no son iguales",
+        newPassword: "Passwords do'nt match",
+        repeatNewPassword: "Passwords do'nt match",
       };
     } else if (size(formData.newPassword) < 6) {
       errorsTemp = {
-        newPassword: "La contraseña tiene que ser mayor a 5 caracteres.",
-        repeatNewPassword: "La contraseña tiene que ser mayor a 5 caracteres.",
+        newPassword: "Passwords must be 5 characters or more",
+        repeatNewPassword: "Passwords must be 5 characters or more",
       };
     } else {
       setIsLoading(true);
@@ -62,14 +62,14 @@ export default function ChangePasswordForm(props) {
             })
             .catch(() => {
               errorsTemp = {
-                other: "Error al actualizar la contraseña",
+                other: "Error updating password",
               };
               setIsLoading(false);
             });
         })
         .catch(() => {
           errorsTemp = {
-            password: "La contraseña no es correcta.",
+            password: "Incorrect password",
           };
           setIsLoading(false);
         });
@@ -81,7 +81,7 @@ export default function ChangePasswordForm(props) {
   return (
     <View style={styles.view}>
       <Input
-        placeholder="Contraseña actual"
+        placeholder="Current password"
         containerStyle={styles.input}
         password={true}
         secureTextEntry={showPassword ? false : true}
@@ -95,7 +95,7 @@ export default function ChangePasswordForm(props) {
         errorMessage={errors.password}
       />
       <Input
-        placeholder="Nueva contraseña"
+        placeholder="New password"
         containerStyle={styles.input}
         password={true}
         secureTextEntry={showPassword ? false : true}
@@ -109,7 +109,7 @@ export default function ChangePasswordForm(props) {
         errorMessage={errors.newPassword}
       />
       <Input
-        placeholder="Repetir nueva contraseña"
+        placeholder="Repeat new password"
         containerStyle={styles.input}
         password={true}
         secureTextEntry={showPassword ? false : true}
@@ -123,7 +123,7 @@ export default function ChangePasswordForm(props) {
         errorMessage={errors.repeatNewPassword}
       />
       <Button
-        title="Cambiar contraseña"
+        title="Change Password"
         containerStyle={styles.btnContainer}
         buttonStyle={styles.btn}
         onPress={onSubmit}

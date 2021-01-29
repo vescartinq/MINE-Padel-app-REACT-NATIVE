@@ -6,7 +6,7 @@ import { validateEmail } from "../../utils/validation";
 import { reauthenticate } from "../../utils/api";
 
 export default function ChangeEmailForm(props) {
-  const { email, setShowModal, toastRef, setRealoadUserInfo } = props;
+  const { email, setShowModal, toastRef, setReloadUserInfo } = props;
   const [formData, setFormData] = useState(defaultValue());
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -16,19 +16,19 @@ export default function ChangeEmailForm(props) {
     setFormData({ ...formData, [type]: e.nativeEvent.text });
   };
 
-  const onSubmit = () => {
+  const onSubmit = () => { //TODO
     setErrors({});
     if (!formData.email || email === formData.email) {
       setErrors({
-        email: "El email no ha cambiado.",
+        email: "Email has not changed",
       });
     } else if (!validateEmail(formData.email)) {
       setErrors({
-        email: "Email incorrecto.",
+        email: "Incorrect email",
       });
     } else if (!formData.password) {
       setErrors({
-        password: "La contraseña no puede estar vacia.",
+        password: "The password can't be empty.",
       });
     } else {
       setIsLoading(true);
@@ -39,18 +39,18 @@ export default function ChangeEmailForm(props) {
             .currentUser.updateEmail(formData.email)
             .then(() => {
               setIsLoading(false);
-              setRealoadUserInfo(true);
-              toastRef.current.show("Email actualizado correctamente");
+              setReloadUserInfo(true);
+              toastRef.current.show("Email updated");
               setShowModal(false);
             })
             .catch(() => {
-              setErrors({ email: "Error al actualizar el email." });
+              setErrors({ email: "Error updating email." });
               setIsLoading(false);
             });
         })
         .catch(() => {
           setIsLoading(false);
-          setErrors({ password: "La contraseña no es correcta." });
+          setErrors({ password: "Incorrect email" });
         });
     }
   };
@@ -58,7 +58,7 @@ export default function ChangeEmailForm(props) {
   return (
     <View style={styles.view}>
       <Input
-        placeholder="Correo electronico"
+        placeholder="Enter email"
         containerStyle={styles.input}
         defaultValue={email || ""}
         rightIcon={{
@@ -70,7 +70,7 @@ export default function ChangeEmailForm(props) {
         errorMessage={errors.email}
       />
       <Input
-        placeholder="Contraseña"
+        placeholder="Enter password"
         containerStyle={styles.input}
         password={true}
         secureTextEntry={showPassword ? false : true}
