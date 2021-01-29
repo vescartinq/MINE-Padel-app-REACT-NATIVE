@@ -15,8 +15,8 @@ export default function ChangeEmailForm(props) {
   const onChange = (e, type) => {
     setFormData({ ...formData, [type]: e.nativeEvent.text });
   };
-
-  const onSubmit = () => { //TODO
+  
+  const onSubmit = () => {
     setErrors({});
     if (!formData.email || email === formData.email) {
       setErrors({
