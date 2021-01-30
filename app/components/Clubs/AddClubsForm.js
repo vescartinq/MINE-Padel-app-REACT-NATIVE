@@ -1,77 +1,89 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
   ScrollView,
   Alert,
   Dimensions,
+  Text,
 } from "react-native";
 import { Icon, Input, Button, Avatar, Image } from "react-native-elements";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
 import { filter, map, size } from "lodash";
+import Modal from "../Modal";
 
 const widthScreen = Dimensions.get("window").width;
 
 export default function AddClubForm(props) {
-    const { toastRef } = props;
-    const [clubName, setClubName] = useState("");
-    const [clubAddress, setClubAddress] = useState("");
-    const [clubDescription, setClubDescription] = useState("");
-    const [imagesSelected, setImagesSelected] = useState([]);
-  
+  const { toastRef } = props;
+  const [clubName, setClubName] = useState("");
+  const [clubAddress, setClubAddress] = useState("");
+  const [clubDescription, setClubDescription] = useState("");
+  const [imagesSelected, setImagesSelected] = useState([]);
+  const [isVisibleMap, setIsVisibleMap] = useState(false);
+  const [locationClub, setLocationClub] = useState(null);
 
-    const addClub = () => {
-        console.log("OK")
-        console.log("clubName:"+clubName)
-        console.log("clubAddress:"+clubAddress)
-        console.log("clubDescription:"+clubDescription)
-    };
+  const addClub = () => {
+    console.log("OK");
+    console.log("clubName:" + clubName);
+    console.log("clubAddress:" + clubAddress);
+    console.log("clubDescription:" + clubDescription);
+  };
 
   return (
     <ScrollView style={styles.scrollView}>
       <ImageClub mainImageClub={imagesSelected[0]} />
-       <FormAdd
-         setClubName={setClubName}
-         setClubAddress={setClubAddress}
-         setClubDescription={setClubDescription}
-       />
-       <UploadImage
-         toastRef={toastRef}
-         imagesSelected={imagesSelected}
-         setImagesSelected={setImagesSelected}
-       />
-       <Button
-         title="Create Club"
-         onPress={addClub}
-         buttonStyle={styles.btnAddClub}
-       />
+      <FormAdd
+        setClubName={setClubName}
+        setClubAddress={setClubAddress}
+        setClubDescription={setClubDescription}
+        setIsVisibleMap={setIsVisibleMap}
+      />
+      <UploadImage
+        toastRef={toastRef}
+        imagesSelected={imagesSelected}
+        setImagesSelected={setImagesSelected}
+      />
+      <Button
+        title="Create Club"
+        onPress={addClub}
+        buttonStyle={styles.btnAddClub}
+      />
+      <Map
+        isVisibleMap={isVisibleMap}
+        setIsVisibleMap={setIsVisibleMap}
+        setLocationClub={setLocationClub}
+        toastRef={toastRef}
+      />
     </ScrollView>
   );
 }
 
 function ImageClub(props) {
-    const { mainImageClub } = props;
-  
-    return (
-      <View style={styles.viewPhoto}>
-        <Image
-          source={
-            mainImageClub
-              ? { uri: mainImageClub }
-              : require("../../../assets/img/no-image.png")
-          }
-          style={{ width: widthScreen, height: 200 }}
-        />
-      </View>
-    );
-  }
+  const { mainImageClub } = props;
+
+  return (
+    <View style={styles.viewPhoto}>
+      <Image
+        source={
+          mainImageClub
+            ? { uri: mainImageClub }
+            : require("../../../assets/img/no-image.png")
+        }
+        style={{ width: widthScreen, height: 200 }}
+      />
+    </View>
+  );
+}
 
 function FormAdd(props) {
   const {
     setClubName,
     setClubAddress,
     setClubDescription,
+    setIsVisibleMap,
   } = props;
 
   return (
@@ -85,6 +97,12 @@ function FormAdd(props) {
         placeholder="Enter Address"
         containerStyle={styles.input}
         onChange={(e) => setClubAddress(e.nativeEvent.text)}
+        rightIcon={{
+          type: "material-community",
+          name: "google-maps",
+          color: "#c2c2c2",
+          onPress: () => setIsVisibleMap(true),
+        }}
       />
       <Input
         placeholder="Enter Club Description"
@@ -96,12 +114,48 @@ function FormAdd(props) {
   );
 }
 
+function Map(props) {
+  const { isVisibleMap, setIsVisibleMap, setLocationClub, toastRef} = props;
+  const [location, setLocation] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const resultPermissions = await Permissions.askAsync(
+        Permissions.LOCATION
+      );
+
+      const statusPermissions = resultPermissions.permissions.location.status;
+
+      if (statusPermissions !== "granted") {
+        toastRef.current.show(
+          "You have to accept location permissions to create new clubs",
+          3000
+        );
+      } else {
+        const loc = await Location.getCurrentPositionAsync({});
+        setLocation({
+          latitude: loc.coords.latitude,
+          longitude: loc.coords.longitude,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001,
+        });
+      }
+    })();
+  }, []);
+
+  return (
+    <Modal isVisible={isVisibleMap} setIsVisible={setIsVisibleMap}>
+      <Text>MAPA</Text>
+    </Modal>
+  );
+}
+
 function UploadImage(props) {
   const { toastRef, imagesSelected, setImagesSelected } = props;
 
   const imageSelect = async () => {
-      console.log("Image...");
-      
+    console.log("Image...");
+
     const resultPermissions = await Permissions.askAsync(
       Permissions.CAMERA_ROLL
     );
@@ -116,14 +170,10 @@ function UploadImage(props) {
         allowsEditing: true,
         aspect: [4, 3],
       });
-      
 
       if (result.cancelled) {
-        toastRef.current.show(
-          "Any picture has been added to the Club",
-          2000
-        );
-      } else {          
+        toastRef.current.show("Any picture has been added to the Club", 2000);
+      } else {
         setImagesSelected([...imagesSelected, result.uri]);
       }
     }
@@ -153,7 +203,7 @@ function UploadImage(props) {
 
   return (
     <View style={styles.viewImages}>
-        {size(imagesSelected) < 4 && (
+      {size(imagesSelected) < 4 && (
         <Icon
           type="material-community"
           name="camera"
@@ -161,8 +211,8 @@ function UploadImage(props) {
           containerStyle={styles.containerIcon}
           onPress={imageSelect}
         />
-        )}
-        {map(imagesSelected, (imageClub, index) => (
+      )}
+      {map(imagesSelected, (imageClub, index) => (
         <Avatar
           key={index}
           style={styles.miniatureStyle}
