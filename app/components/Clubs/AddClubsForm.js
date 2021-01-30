@@ -4,11 +4,14 @@ import {
   View,
   ScrollView,
   Alert,
+  Dimensions,
 } from "react-native";
-import { Icon, Input, Button, Avatar } from "react-native-elements";
+import { Icon, Input, Button, Avatar, Image } from "react-native-elements";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import { filter, map, size } from "lodash";
+
+const widthScreen = Dimensions.get("window").width;
 
 export default function AddClubForm(props) {
     const { toastRef } = props;
@@ -27,7 +30,7 @@ export default function AddClubForm(props) {
 
   return (
     <ScrollView style={styles.scrollView}>
-      
+      <ImageClub mainImageClub={imagesSelected[0]} />
        <FormAdd
          setClubName={setClubName}
          setClubAddress={setClubAddress}
@@ -46,6 +49,23 @@ export default function AddClubForm(props) {
     </ScrollView>
   );
 }
+
+function ImageClub(props) {
+    const { mainImageClub } = props;
+  
+    return (
+      <View style={styles.viewPhoto}>
+        <Image
+          source={
+            mainImageClub
+              ? { uri: mainImageClub }
+              : require("../../../assets/img/no-image.png")
+          }
+          style={{ width: widthScreen, height: 200 }}
+        />
+      </View>
+    );
+  }
 
 function FormAdd(props) {
   const {
