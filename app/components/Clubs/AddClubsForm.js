@@ -3,11 +3,12 @@ import {
   StyleSheet,
   View,
   ScrollView,
+  Alert,
 } from "react-native";
 import { Icon, Input, Button, Avatar } from "react-native-elements";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
-import { map, size } from "lodash";
+import { filter, map, size } from "lodash";
 
 export default function AddClubForm(props) {
     const { toastRef } = props;
@@ -108,6 +109,28 @@ function UploadImage(props) {
     }
   };
 
+  const removeImage = (image) => {
+    Alert.alert(
+      "Delete Image",
+      "¿Are you sure you want to delete the selected image?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => {
+            setImagesSelected(
+              filter(imagesSelected, (imageUrl) => imageUrl !== image)
+            );
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <View style={styles.viewImages}>
         {size(imagesSelected) < 4 && (
@@ -124,6 +147,7 @@ function UploadImage(props) {
           key={index}
           style={styles.miniatureStyle}
           source={{ uri: imageClub }}
+          onPress={() => removeImage(imageClub)}
         />
       ))}
     </View>
