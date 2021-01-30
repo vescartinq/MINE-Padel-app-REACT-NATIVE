@@ -4,9 +4,10 @@ import {
   View,
   ScrollView,
 } from "react-native";
-import { Icon, Input, Button } from "react-native-elements";
+import { Icon, Input, Button, Avatar } from "react-native-elements";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
+import { map, size } from "lodash";
 
 export default function AddClubForm(props) {
     const { toastRef } = props;
@@ -109,7 +110,7 @@ function UploadImage(props) {
 
   return (
     <View style={styles.viewImages}>
-
+        {size(imagesSelected) < 4 && (
         <Icon
           type="material-community"
           name="camera"
@@ -117,6 +118,14 @@ function UploadImage(props) {
           containerStyle={styles.containerIcon}
           onPress={imageSelect}
         />
+        )}
+        {map(imagesSelected, (imageClub, index) => (
+        <Avatar
+          key={index}
+          style={styles.miniatureStyle}
+          source={{ uri: imageClub }}
+        />
+      ))}
     </View>
   );
 }
