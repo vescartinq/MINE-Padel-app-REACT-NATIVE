@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Icon } from "react-native-elements";
-import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";
 
 export default function Clubs({navigation}) {
     const [user, setUser] = useState(null);
-    const [clubs, setClubs] = useState([]);
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged((userInfo) => {
