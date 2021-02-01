@@ -21,6 +21,11 @@
     },
     "android": {
       "package": "com.thatsmine.padelapp",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyByKSZMRrd1SY5UEGOz6RK9Qbpdunh0-_o"
+        }
+      },
       "permissions": [
         "CAMERA_ROLL",
         "READ_EXTERNAL_STORAGE",
