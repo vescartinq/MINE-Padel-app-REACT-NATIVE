@@ -7,11 +7,16 @@ import * as Location from "expo-location";
 import MapView from "react-native-maps";
 import { filter, map, size } from "lodash";
 import Modal from "../Modal";
+import uuid from "random-uuid-v4";
+
+import { firebaseApp } from "../../utils/firebase";
+import firebase from "firebase/app";
+import "firebase/storage";
 
 const widthScreen = Dimensions.get("window").width;
 
 export default function AddClubForm(props) {
-  const { toastRef } = props;
+  const { toastRef, setIsLoading, navigation } = props;
   const [clubName, setClubName] = useState("");
   const [clubAddress, setClubAddress] = useState("");
   const [clubDescription, setClubDescription] = useState("");
@@ -27,8 +32,36 @@ export default function AddClubForm(props) {
     } else if (!locationClub) {
       toastRef.current.show("Please locate the club on the map");
     } else {
-      console.log("all OK");
+      setIsLoading(true);
+      uploadImageStorage().then((response)=>{
+        console.log(response);
+        setIsLoading(false);
+        
+      });
     }
+  };
+
+  const uploadImageStorage = async () => {
+    const imageBlob = [];
+
+    await Promise.all(
+      map(imagesSelected, async (image) => {
+        const response = await fetch(image);
+        const blob = await response.blob();
+        const ref = firebase.storage().ref("clubs").child(uuid());
+        await ref.put(blob).then(async (result) => {
+          await firebase
+            .storage()
+            .ref(`clubs/${result.metadata.name}`)
+            .getDownloadURL()
+            .then((photoUrl) => {
+              imageBlob.push(photoUrl);
+            });
+        });
+      })
+    );
+
+    return imageBlob;
   };
 
   return (
@@ -84,7 +117,7 @@ function FormAdd(props) {
     setClubAddress,
     setClubDescription,
     setIsVisibleMap,
-    locationClub
+    locationClub,
   } = props;
 
   return (
