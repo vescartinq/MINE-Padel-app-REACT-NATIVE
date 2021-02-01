@@ -12,6 +12,8 @@ import uuid from "random-uuid-v4";
 import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";
 import "firebase/storage";
+import "firebase/firestore";
+const db = firebase.firestore(firebaseApp);
 
 const widthScreen = Dimensions.get("window").width;
 
@@ -33,10 +35,30 @@ export default function AddClubForm(props) {
       toastRef.current.show("Please locate the club on the map");
     } else {
       setIsLoading(true);
-      uploadImageStorage().then((response)=>{
-        console.log(response);
-        setIsLoading(false);
-        
+      uploadImageStorage().then((response) => {
+        db.collection("clubs")
+          .add({
+            name: clubName,
+            address: clubAddress,
+            description: clubDescription,
+            location: locationClub,
+            images: response,
+            rating: 0,
+            ratingTotal: 0,
+            quantityVoting: 0,
+            createAt: new Date(),
+            createBy: firebase.auth().currentUser.uid,
+          })
+          .then(() => {
+            setIsLoading(false);
+            navigation.navigate("clubs");
+          })
+          .catch(() => {
+            setIsLoading(false);
+            toastRef.current.show(
+              "Error uploading club, please try again in a few minutes"
+            );
+          });
       });
     }
   };
