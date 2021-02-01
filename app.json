@@ -20,6 +20,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.thatsmine.padelapp",
       "permissions": [
         "CAMERA_ROLL",
         "READ_EXTERNAL_STORAGE",
