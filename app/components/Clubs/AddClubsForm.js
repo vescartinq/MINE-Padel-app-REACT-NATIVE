@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Alert,
-  Dimensions,
-  Text,
-} from "react-native";
+import { StyleSheet, View, ScrollView, Alert, Dimensions } from "react-native";
 import { Icon, Input, Button, Avatar, Image } from "react-native-elements";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
@@ -27,11 +20,15 @@ export default function AddClubForm(props) {
   const [locationClub, setLocationClub] = useState(null);
 
   const addClub = () => {
-    // console.log("OK");
-    // console.log("clubName:" + clubName);
-    // console.log("clubAddress:" + clubAddress);
-    // console.log("clubDescription:" + clubDescription);
-    console.log(locationClub);
+    if (!clubName || !clubAddress || !clubDescription) {
+      toastRef.current.show("Please complete all the fields to create a club");
+    } else if (size(imagesSelected) === 0) {
+      toastRef.current.show("The club must have at least one image");
+    } else if (!locationClub) {
+      toastRef.current.show("Please locate the club on the map");
+    } else {
+      console.log("all OK");
+    }
   };
 
   return (
@@ -42,6 +39,7 @@ export default function AddClubForm(props) {
         setClubAddress={setClubAddress}
         setClubDescription={setClubDescription}
         setIsVisibleMap={setIsVisibleMap}
+        locationClub={locationClub}
       />
       <UploadImage
         toastRef={toastRef}
@@ -86,6 +84,7 @@ function FormAdd(props) {
     setClubAddress,
     setClubDescription,
     setIsVisibleMap,
+    locationClub
   } = props;
 
   return (
@@ -102,7 +101,7 @@ function FormAdd(props) {
         rightIcon={{
           type: "material-community",
           name: "google-maps",
-          color: "#c2c2c2",
+          color: locationClub ? "#00a680" : "#c2c2c2",
           onPress: () => setIsVisibleMap(true),
         }}
       />
@@ -117,7 +116,7 @@ function FormAdd(props) {
 }
 
 function Map(props) {
-  const { isVisibleMap, setIsVisibleMap, setLocationClub, toastRef} = props;
+  const { isVisibleMap, setIsVisibleMap, setLocationClub, toastRef } = props;
   const [location, setLocation] = useState(null);
 
   useEffect(() => {
@@ -161,7 +160,7 @@ function Map(props) {
             showsUserLocation={true}
             onRegionChange={(region) => setLocation(region)}
           >
-             <MapView.Marker
+            <MapView.Marker
               coordinate={{
                 latitude: location.latitude,
                 longitude: location.longitude,
@@ -170,8 +169,8 @@ function Map(props) {
             />
           </MapView>
         )}
-      </View>
-      <View style={styles.viewMapBtn}>
+
+        <View style={styles.viewMapBtn}>
           <Button
             title="Save Location"
             containerStyle={styles.viewMapBtnContainerSave}
@@ -185,6 +184,7 @@ function Map(props) {
             onPress={() => setIsVisibleMap(false)}
           />
         </View>
+      </View>
     </Modal>
   );
 }
@@ -319,7 +319,6 @@ const styles = StyleSheet.create({
   },
   viewMapBtnContainerCancel: {
     paddingLeft: 5,
-    
   },
   viewMapBtnCancel: {
     backgroundColor: "#a60d0d",

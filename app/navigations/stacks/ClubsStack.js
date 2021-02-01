@@ -5,7 +5,7 @@ import AddClub from "../../screens/Clubs/AddClub";
 
 const Stack = createStackNavigator();
 
-export default function ResaturantsStack() {
+export default function ClubsStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
