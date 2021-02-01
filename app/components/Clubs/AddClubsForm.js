@@ -11,6 +11,7 @@ import { Icon, Input, Button, Avatar, Image } from "react-native-elements";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
+import MapView from "react-native-maps";
 import { filter, map, size } from "lodash";
 import Modal from "../Modal";
 
@@ -26,10 +27,11 @@ export default function AddClubForm(props) {
   const [locationClub, setLocationClub] = useState(null);
 
   const addClub = () => {
-    console.log("OK");
-    console.log("clubName:" + clubName);
-    console.log("clubAddress:" + clubAddress);
-    console.log("clubDescription:" + clubDescription);
+    // console.log("OK");
+    // console.log("clubName:" + clubName);
+    // console.log("clubAddress:" + clubAddress);
+    // console.log("clubDescription:" + clubDescription);
+    console.log(locationClub);
   };
 
   return (
@@ -143,9 +145,46 @@ function Map(props) {
     })();
   }, []);
 
+  const confirmLocation = () => {
+    setLocationClub(location);
+    toastRef.current.show("Location saved succesfully");
+    setIsVisibleMap(false);
+  };
+
   return (
     <Modal isVisible={isVisibleMap} setIsVisible={setIsVisibleMap}>
-      <Text>MAPA</Text>
+      <View>
+        {location && (
+          <MapView
+            style={styles.mapStyle}
+            initialRegion={location}
+            showsUserLocation={true}
+            onRegionChange={(region) => setLocation(region)}
+          >
+             <MapView.Marker
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+              }}
+              draggable
+            />
+          </MapView>
+        )}
+      </View>
+      <View style={styles.viewMapBtn}>
+          <Button
+            title="Save Location"
+            containerStyle={styles.viewMapBtnContainerSave}
+            buttonStyle={styles.viewMapBtnSave}
+            onPress={confirmLocation}
+          />
+          <Button
+            title="Cancel Location"
+            containerStyle={styles.viewMapBtnContainerCancel}
+            buttonStyle={styles.viewMapBtnCancel}
+            onPress={() => setIsVisibleMap(false)}
+          />
+        </View>
     </Modal>
   );
 }
@@ -280,14 +319,17 @@ const styles = StyleSheet.create({
   },
   viewMapBtnContainerCancel: {
     paddingLeft: 5,
+    
   },
   viewMapBtnCancel: {
     backgroundColor: "#a60d0d",
+    borderRadius: 15,
   },
   viewMapBtnContainerSave: {
     paddingRight: 5,
   },
   viewMapBtnSave: {
     backgroundColor: "#00a680",
+    borderRadius: 15,
   },
 });
