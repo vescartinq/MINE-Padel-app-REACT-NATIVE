@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, } from "react";
 import { Dimensions, StyleSheet, Text, View, ScrollView } from "react-native";
 import { ListItem, Rating } from "react-native-elements";
-import { useFocusEffect } from "@react-navigation/native";
+
 import Loading from "../../components/Loading";
 import Carousel from "../../components/CarouselImages";
 
@@ -19,9 +19,6 @@ export default function Club(props) {
   const { id, name } = route.params;
   const [club, setClub] = useState(null);
   const [rating, setRating] = useState(0);
-  //   const [isFavorite, setIsFavorite] = useState(false);
-  //   const [userLogged, setUserLogged] = useState(false);
-  //   const toastRef = useRef();
 
   navigation.setOptions({ title: name });
 
