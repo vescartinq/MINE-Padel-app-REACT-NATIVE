@@ -11,7 +11,8 @@ import { Image } from "react-native-elements";
 import { size } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ListClubs({clubs}) {
+export default function ListClubs(props) {
+    const { clubs, handleLoadMore, isLoading } = props;
     const navigation = useNavigation();
 
 
@@ -24,9 +25,9 @@ export default function ListClubs({clubs}) {
               <Club club={club} navigation={navigation} />
             )}
             keyExtractor={(item, index) => index.toString()}
-            // onEndReachedThreshold={0.5}
-            // onEndReached={handleLoadMore}
-            // ListFooterComponent={<FooterList isLoading={isLoading} />}
+            onEndReachedThreshold={0.5}
+            onEndReached={handleLoadMore}
+            ListFooterComponent={<FooterList isLoading={isLoading} />}
           /> 
       ) : (
           <View style={styles.loaderClubs}>

@@ -8,47 +8,77 @@ import ListClubs from "../../components/Clubs/ListClubs";
 
 const db = firebase.firestore(firebaseApp);
 
-export default function Clubs({navigation}) {
-    const [user, setUser] = useState(null);
-    const [clubs, setClubs] = useState([]);
-    const [totalClubs, setTotalClubs] = useState(0);
-    const [startClubs, setStartClubs] = useState(null);
-    const limitClubs = 10;
+export default function Clubs({ navigation }) {
+  const [user, setUser] = useState(null);
+  const [clubs, setClubs] = useState([]);
+  const [totalClubs, setTotalClubs] = useState(0);
+  const [startClubs, setStartClubs] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const limitClubs = 10;
 
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged((userInfo) => {
-          setUser(userInfo);
-        });
-      }, []);
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((userInfo) => {
+      setUser(userInfo);
+    });
+  }, []);
 
-      useEffect(() => {
-        db.collection("clubs")
-        .get()
-        .then((snap) => {
-          setTotalClubs(snap.size);
+  useEffect(() => {
+    db.collection("clubs")
+      .get()
+      .then((snap) => {
+        setTotalClubs(snap.size);
       });
 
-      const resultClubs = [];
-      db.collection("clubs")
-        .orderBy("createAt", "desc")
-        .limit(limitClubs)
-        .get()
-        .then((response) => {
+    const resultClubs = [];
+    db.collection("clubs")
+      .orderBy("createAt", "asc")
+      .limit(limitClubs)
+      .get()
+      .then((response) => {
+        setStartClubs(response.docs[response.docs.length - 1]);
+
+        response.forEach((doc) => {
+          const club = doc.data();
+          club.id = doc.id;
+          resultClubs.push(club);
+        });
+        setClubs(resultClubs);
+      });
+  }, []);
+
+  const handleLoadMore = () => {
+    const resultClubs = [];
+    clubs.length < totalClubs && setIsLoading(true);
+
+    db.collection("clubs")
+      .orderBy("createAt", "asc")
+      .startAfter(startClubs.data().createAt)
+      .limit(limitClubs)
+      .get()
+      .then((response) => {
+        if (response.docs.length > 0) {
           setStartClubs(response.docs[response.docs.length - 1]);
+        } else {
+          setIsLoading(false);
+        }
 
-          response.forEach((doc) => {
-            const club = doc.data();
-            club.id = doc.id;
-            resultClubs.push(club);
-          });
-          setClubs(resultClubs);
-        })
-    }, [])
+        response.forEach((doc) => {
+          const club = doc.data();
+          club.id = doc.id;
+          resultClubs.push(club);
+        });
 
+        setClubs([...clubs, ...resultClubs]);
+      });
+  };
 
   return (
     <View style={styles.viewBody}>
-      <ListClubs clubs={clubs}/>
+      <ListClubs
+        clubs={clubs}
+        handleLoadMore={handleLoadMore}
+        isLoading={isLoading}
+      />
       {user && (
         <Icon
           reverse
