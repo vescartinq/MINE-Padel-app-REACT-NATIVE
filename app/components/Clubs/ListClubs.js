@@ -38,11 +38,41 @@ export default function ListClubs({clubs}) {
   );
 }
 
-function Club({restaurant, navigation}){
+function Club({club, navigation}){
+    const { id, images, name, address, description } = club.item;
+    const imageClub = images ? images[0] : null;
+  
+    const goClub = () => {
+      navigation.navigate("club", {
+        id,
+        name,
+      });
+    };
+
     return (
-        <View>
-            <Text>Club Data</Text>
+        <TouchableOpacity onPress={goClub}>
+        <View style={styles.viewClub}>
+          <View style={styles.viewClubImage}>
+            <Image
+              resizeMode="cover"
+              PlaceholderContent={<ActivityIndicator color="fff" />}
+              source={
+                imageClub
+                  ? { uri: imageClub }
+                  : require("../../../assets/img/no-image.png")
+              }
+              style={styles.imageClub}
+            />
+          </View>
+          <View>
+            <Text style={styles.clubName}>{name}</Text>
+            <Text style={styles.clubAddress}>{address}</Text>
+            <Text style={styles.clubDescription}>
+              {description.substr(0, 60)}
+            </Text>
+          </View>
         </View>
+      </TouchableOpacity>
     )
 }
 
