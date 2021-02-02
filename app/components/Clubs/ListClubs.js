@@ -127,5 +127,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 20,
         alignItems: "center",
+        backgroundColor: "#CED0CE",
+        padding: 10
       },
 });
