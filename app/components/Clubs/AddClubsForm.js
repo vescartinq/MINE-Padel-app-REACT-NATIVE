@@ -248,7 +248,6 @@ function UploadImage(props) {
   const { toastRef, imagesSelected, setImagesSelected } = props;
 
   const imageSelect = async () => {
-    console.log("Image...");
 
     const resultPermissions = await Permissions.askAsync(
       Permissions.CAMERA_ROLL
