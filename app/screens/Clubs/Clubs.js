@@ -4,6 +4,7 @@ import { Icon } from "react-native-elements";
 import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import ListClubs from "../../components/Clubs/ListClubs";
 
 const db = firebase.firestore(firebaseApp);
 
@@ -13,8 +14,6 @@ export default function Clubs({navigation}) {
     const [totalClubs, setTotalClubs] = useState(0);
     const [startClubs, setStartClubs] = useState(null);
     const limitClubs = 10;
-
-    console.log(clubs)
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged((userInfo) => {
@@ -49,7 +48,7 @@ export default function Clubs({navigation}) {
 
   return (
     <View style={styles.viewBody}>
-      <Text>Clubs...</Text>
+      <ListClubs clubs={clubs}/>
       {user && (
         <Icon
           reverse
