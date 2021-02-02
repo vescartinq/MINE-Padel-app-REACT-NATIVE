@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Dimensions, StyleSheet, Text, View, ScrollView } from "react-native";
-import { Rating } from "react-native-elements";
+import { ListItem, Rating } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
 import Loading from "../../components/Loading";
 import Carousel from "../../components/CarouselImages";
@@ -8,6 +8,8 @@ import Carousel from "../../components/CarouselImages";
 import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { map } from "lodash";
+import Map from "../../components/Map";
 
 const db = firebase.firestore(firebaseApp);
 const screenWidth = Dimensions.get("window").width;
@@ -46,6 +48,11 @@ export default function Club(props) {
           description={club.description}
           rating={rating}
         />
+        <ClubInfo
+        location={club.location}
+        name={club.name}
+        address={club.address}
+      />
       </View>
     </ScrollView>
   );
@@ -69,6 +76,52 @@ function TitleClub(props) {
       </View>
     );
   }
+
+  function ClubInfo(props) {
+    const { location, name, address } = props;
+  
+    const listInfo = [
+      {
+        text: address,
+        iconName: "map-marker",
+        iconType: "material-community",
+        action: null,
+      },
+      {
+        text: "111 222 333",
+        iconName: "phone",
+        iconType: "material-community",
+        action: null,
+      },
+      {
+        text: "email@example.com",
+        iconName: "at",
+        iconType: "material-community",
+        action: null,
+      },
+    ];
+
+    return (
+        <View style={styles.viewclubInfo}>
+          <Text style={styles.clubInfoTitle}>
+            Contact Details
+          </Text>
+          <Map location={location} name={name} height={100} />
+          {map(listInfo, (item, index) => (
+            <ListItem
+              key={index}
+              title={item.text}
+              leftIcon={{
+                name: item.iconName,
+                type: item.iconType,
+                color: "#00a680",
+              }}
+              containerStyle={styles.containerListItem}
+            />
+          ))}
+        </View>
+      );
+    }
 
 const styles = StyleSheet.create({
   viewBody: {
@@ -98,6 +151,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+    padding: 15,
   },
   containerListItem: {
     borderBottomColor: "#d8d8d8",
