@@ -29,7 +29,7 @@ export default function AddReviewClub(props) {
     } else {
       setIsLoading(true);
       const user = firebaseApp.auth().currentUser;
-      const paylod = {
+      const payload = {
         idUser: user.uid,
         avatarUser: user.photoURL,
         idClub: idClub,
@@ -40,7 +40,7 @@ export default function AddReviewClub(props) {
       };
 
       db.collection("reviews")
-        .add(paylod)
+        .add(payload)
         .then(() => {
           updateClub();
         })
