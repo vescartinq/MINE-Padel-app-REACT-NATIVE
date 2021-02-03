@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useRef, useCallback } from "react";
 import { Dimensions, StyleSheet, Text, View, ScrollView } from "react-native";
 import { ListItem, Rating } from "react-native-elements";
