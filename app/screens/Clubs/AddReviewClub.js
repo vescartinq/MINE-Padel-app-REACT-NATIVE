@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 
 export default function AddReviewClub(props) {
     const { navigation, route } = props;
+    const { idClub } = route.params;
 
     return (
         <View>
