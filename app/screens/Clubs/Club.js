@@ -38,7 +38,6 @@ export default function Club(props) {
         .get()
         .then((response) => {
           const data = response.data();
-          console.log(data);
           data.id = response.id;
           setClub(data);
           setRating(data.rating);
