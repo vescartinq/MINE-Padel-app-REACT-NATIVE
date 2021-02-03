@@ -54,7 +54,6 @@ export default function Clubs({ navigation }) {
     clubs.length < totalClubs && setIsLoading(true);
 
     db.collection("clubs")
-      .orderBy("createAt", "asc")
       .startAfter(startClubs.data().createAt)
       .limit(limitClubs)
       .get()

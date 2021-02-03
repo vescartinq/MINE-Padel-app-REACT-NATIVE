@@ -32,17 +32,18 @@ export default function Club(props) {
   });
 
   useFocusEffect(
-  useCallback(() => {
-    db.collection("clubs")
-      .doc(id)
-      .get()
-      .then((response) => {
-        const data = response.data();
-        data.id = response.id;
-        setClub(data);
-        setRating(data.rating);
-      });
-  }, [])
+    useCallback(() => {
+      db.collection("clubs")
+        .doc(id)
+        .get()
+        .then((response) => {
+          const data = response.data();
+          console.log(data);
+          data.id = response.id;
+          setClub(data);
+          setRating(data.rating);
+        });
+    }, [])
   );
 
   if (!club) return <Loading isVisible={true} text="Loading..." />;
