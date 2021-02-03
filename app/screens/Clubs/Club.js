@@ -1,4 +1,4 @@
-import React, { useState, useEffect, } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { Dimensions, StyleSheet, Text, View, ScrollView } from "react-native";
 import { ListItem, Rating } from "react-native-elements";
 
@@ -9,7 +9,10 @@ import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { map } from "lodash";
+import { useFocusEffect } from "@react-navigation/native";
 import Map from "../../components/Map";
+import ListReviews from "../../components/Clubs/ListReview";
+import Toast from "react-native-easy-toast";
 
 const db = firebase.firestore(firebaseApp);
 const screenWidth = Dimensions.get("window").width;
@@ -19,10 +22,17 @@ export default function Club(props) {
   const { id, name } = route.params;
   const [club, setClub] = useState(null);
   const [rating, setRating] = useState(0);
+  const [userLogged, setUserLogged] = useState(false);
+  const toastRef = useRef();
 
   navigation.setOptions({ title: name });
 
-  useEffect(() => {
+  firebase.auth().onAuthStateChanged((user) => {
+    user ? setUserLogged(true) : setUserLogged(false);
+  });
+
+  useFocusEffect(
+  useCallback(() => {
     db.collection("clubs")
       .doc(id)
       .get()
@@ -32,7 +42,8 @@ export default function Club(props) {
         setClub(data);
         setRating(data.rating);
       });
-  }, []);
+  }, [])
+  );
 
   if (!club) return <Loading isVisible={true} text="Loading..." />;
 
@@ -46,79 +57,79 @@ export default function Club(props) {
           rating={rating}
         />
         <ClubInfo
-        location={club.location}
-        name={club.name}
-        address={club.address}
-      />
+          location={club.location}
+          name={club.name}
+          address={club.address}
+        />
+        <ListReviews navigation={navigation} idClub={club.id} />
+        <Toast ref={toastRef} position="center" opacity={0.9} />
       </View>
     </ScrollView>
   );
 }
 
 function TitleClub(props) {
-    const { name, description, rating } = props;
-  
-    return (
-      <View style={styles.viewClubTitle}>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.nameClub}>{name}</Text>
-          <Rating
-            style={styles.rating}
-            imageSize={20}
-            readonly
-            startingValue={parseFloat(rating)}
-          />
-        </View>
-        <Text style={styles.descriptionClub}>{description}</Text>
+  const { name, description, rating } = props;
+
+  return (
+    <View style={styles.viewClubTitle}>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={styles.nameClub}>{name}</Text>
+        <Rating
+          style={styles.rating}
+          imageSize={20}
+          readonly
+          startingValue={parseFloat(rating)}
+        />
       </View>
-    );
-  }
+      <Text style={styles.descriptionClub}>{description}</Text>
+    </View>
+  );
+}
 
-  function ClubInfo(props) {
-    const { location, name, address } = props;
-  
-    const listInfo = [
-      {
-        text: address,
-        iconName: "map-marker",
-        iconType: "material-community",
-        action: null,
-      },
-      {
-        text: "111 222 333",
-        iconName: "phone",
-        iconType: "material-community",
-        action: null,
-      },
-      {
-        text: "email@example.com",
-        iconName: "at",
-        iconType: "material-community",
-        action: null,
-      },
-    ];
+function ClubInfo(props) {
+  const { location, name, address } = props;
 
-    return (
-        <View style={styles.viewclubInfo}>
-          <Text style={styles.clubInfoTitle}>
-            Contact Details
-          </Text>
-          <Map location={location} name={name} height={100} />
-          {map(listInfo, (item, index) => (
-            <ListItem
-              key={index}
-              title={item.text}
-              leftIcon={{
-                name: item.iconName,
-                type: item.iconType,
-                color: "#00a680",
-              }}
-              containerStyle={styles.containerListItem}
-            />
-          ))}
-        </View>
-      );
-    }
+  const listInfo = [
+    {
+      text: address,
+      iconName: "map-marker",
+      iconType: "material-community",
+      action: null,
+    },
+    {
+      text: "111 222 333",
+      iconName: "phone",
+      iconType: "material-community",
+      action: null,
+    },
+    {
+      text: "email@example.com",
+      iconName: "at",
+      iconType: "material-community",
+      action: null,
+    },
+  ];
+
+  return (
+    <View style={styles.viewclubInfo}>
+      <Text style={styles.clubInfoTitle}>Contact Details</Text>
+      <Map location={location} name={name} height={100} />
+      {map(listInfo, (item, index) => (
+        <ListItem
+          key={index}
+          title={item.text}
+          leftIcon={{
+            name: item.iconName,
+            type: item.iconType,
+            color: "#00a680",
+          }}
+          containerStyle={styles.containerListItem}
+        />
+      ))}
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   viewBody: {
