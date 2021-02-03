@@ -59,9 +59,7 @@ export default function ListReviews(props) {
             onPress={() => navigation.navigate("login")}
           >
             To share your comments you have to be logged{" "}
-            <Text style={{ fontWeight: "bold" }}>
-              press HERE to sign in
-            </Text>
+            <Text style={{ fontWeight: "bold" }}>press HERE to sign in</Text>
           </Text>
         </View>
       )}
