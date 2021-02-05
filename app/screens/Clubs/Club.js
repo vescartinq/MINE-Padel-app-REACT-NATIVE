@@ -1,6 +1,7 @@
-import React, { useState, useRef, useCallback } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Dimensions, StyleSheet, Text, View, ScrollView } from "react-native";
-import { ListItem, Rating } from "react-native-elements";
+import { Icon, ListItem, Rating } from "react-native-elements";
 
 import Loading from "../../components/Loading";
 import Carousel from "../../components/CarouselImages";
@@ -22,6 +23,7 @@ export default function Club(props) {
   const { id, name } = route.params;
   const [club, setClub] = useState(null);
   const [rating, setRating] = useState(0);
+  const [isFavorite, setIsFavorite] = useState(false);
   const [userLogged, setUserLogged] = useState(false);
   const toastRef = useRef();
 
@@ -45,25 +47,93 @@ export default function Club(props) {
     }, [])
   );
 
+  useEffect(() => {
+    if (userLogged && club) {
+      db.collection("favorites")
+        .where("idClub", "==", club.id)
+        .where("idUser", "==", firebase.auth().currentUser.uid)
+        .get()
+        .then((response) => {
+          if (response.docs.length === 1) {
+            setIsFavorite(true);
+          }
+        });
+    }
+  }, [userLogged, club]);
+
+  const addFavorite = () => {
+    if (!userLogged) {
+      toastRef.current.show(
+        "Please, sign in to add favorite clubs"
+      );
+    } else {
+      const payload = {
+        idUser: firebase.auth().currentUser.uid,
+        idClub: club.id,
+      };
+      db.collection("favorites")
+        .add(payload)
+        .then(() => {
+          setIsFavorite(true);
+          toastRef.current.show("Added to favorites" );
+        })
+        .catch(() => {
+          toastRef.current.show("Error adding favorite club, please try again");
+        });
+    }
+  };
+
+  const removeFavorite = () => {
+    db.collection("favorites")
+      .where("idClub", "==", club.id)
+      .where("idUser", "==", firebase.auth().currentUser.uid)
+      .get()
+      .then((response) => {
+        response.forEach((doc) => {
+          const idFavorite = doc.id;
+          db.collection("favorites")
+            .doc(idFavorite)
+            .delete()
+            .then(() => {
+              setIsFavorite(false);
+              toastRef.current.show("Removed from favorites");
+            })
+            .catch(() => {
+              toastRef.current.show(
+                "Error removing from favorites, please try again"
+              );
+            });
+        });
+      });
+  };
+
   if (!club) return <Loading isVisible={true} text="Loading..." />;
 
   return (
     <ScrollView vertical style={styles.viewBody}>
-      <View>
-        <Carousel arrayImages={club.images} height={250} width={screenWidth} />
-        <TitleClub
-          name={club.name}
-          description={club.description}
-          rating={rating}
+      <View style={styles.viewFavorite}>
+        <Icon
+          type="material-community"
+          name={isFavorite ? "heart" : "heart-outline"}
+          onPress={isFavorite ? removeFavorite : addFavorite}
+          color={isFavorite ? "#f00" : "#000"}
+          size={35}
+          underlayColor="transparent"
         />
-        <ClubInfo
-          location={club.location}
-          name={club.name}
-          address={club.address}
-        />
-        <ListReviews navigation={navigation} idClub={club.id} />
-        <Toast ref={toastRef} position="center" opacity={0.9} />
       </View>
+      <Carousel arrayImages={club.images} height={250} width={screenWidth} />
+      <TitleClub
+        name={club.name}
+        description={club.description}
+        rating={rating}
+      />
+      <ClubInfo
+        location={club.location}
+        name={club.name}
+        address={club.address}
+      />
+      <ListReviews navigation={navigation} idClub={club.id} />
+      <Toast ref={toastRef} position="center" opacity={0.9} />
     </ScrollView>
   );
 }
