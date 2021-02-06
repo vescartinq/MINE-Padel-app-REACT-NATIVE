@@ -38,6 +38,10 @@ A list of technologies used within the project:
 ## 4. Installation
 A little intro about the installation:
 
+For correct execution of the app, you will need a .env file
+that stores your GOOGLE MAPS API KEY, and execute it into your
+app.json.
+
 ```
 $ git clone https://github.com/vescartinq/MINE-Padel-app-REACT-NATIVE.git
 
