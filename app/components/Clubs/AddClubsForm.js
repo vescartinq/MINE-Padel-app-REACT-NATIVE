@@ -21,13 +21,15 @@ export default function AddClubForm(props) {
   const { toastRef, setIsLoading, navigation } = props;
   const [clubName, setClubName] = useState("");
   const [clubAddress, setClubAddress] = useState("");
+  const [clubPhone, setClubPhone] = useState("");
+  const [clubEmail, setClubEmail] = useState("");
   const [clubDescription, setClubDescription] = useState("");
   const [imagesSelected, setImagesSelected] = useState([]);
   const [isVisibleMap, setIsVisibleMap] = useState(false);
   const [locationClub, setLocationClub] = useState(null);
 
   const addClub = () => {
-    if (!clubName || !clubAddress || !clubDescription) {
+    if (!clubName || !clubAddress ||  !clubPhone || !clubEmail ||!clubDescription) {
       toastRef.current.show("Please complete all the fields to create a club");
     } else if (size(imagesSelected) === 0) {
       toastRef.current.show("The club must have at least one image");
@@ -40,6 +42,8 @@ export default function AddClubForm(props) {
           .add({
             name: clubName,
             address: clubAddress,
+            phone: clubPhone,
+            email: clubEmail,
             description: clubDescription,
             location: locationClub,
             images: response,
@@ -92,6 +96,8 @@ export default function AddClubForm(props) {
       <FormAdd
         setClubName={setClubName}
         setClubAddress={setClubAddress}
+        setClubPhone={setClubPhone}
+        setClubEmail={setClubEmail}
         setClubDescription={setClubDescription}
         setIsVisibleMap={setIsVisibleMap}
         locationClub={locationClub}
@@ -137,6 +143,8 @@ function FormAdd(props) {
   const {
     setClubName,
     setClubAddress,
+    setClubPhone,
+    setClubEmail,
     setClubDescription,
     setIsVisibleMap,
     locationClub,
@@ -159,6 +167,16 @@ function FormAdd(props) {
           color: locationClub ? "#00a680" : "#c2c2c2",
           onPress: () => setIsVisibleMap(true),
         }}
+      />
+      <Input
+        placeholder="Enter Club Phone"
+        containerStyle={styles.input}
+        onChange={(e) => setClubPhone(e.nativeEvent.text)}
+      />
+      <Input
+        placeholder="Enter Club Email"
+        containerStyle={styles.input}
+        onChange={(e) => setClubEmail(e.nativeEvent.text)}
       />
       <Input
         placeholder="Enter Club Description"
