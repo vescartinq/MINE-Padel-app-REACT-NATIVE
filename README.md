@@ -20,8 +20,8 @@ This app has been created with React-Native, and is built with the following tec
 - LODASH
 
 ## 2. Web Example
-You can view the app online here : 
--work in progress
+You can download the app here : 
+https://expo.io/@vescartinq/projects/mine-padel-app 
 
 ## 3. Technologies
 A list of technologies used within the project:
