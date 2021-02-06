@@ -23,7 +23,7 @@
       "package": "com.thatsmine.padelapp",
       "config": {
         "googleMaps": {
-          "apiKey": "xxxxx"
+          "apiKey": "<enter here your GOOGLE_API_KEY>"
         }
       },
       "permissions": [

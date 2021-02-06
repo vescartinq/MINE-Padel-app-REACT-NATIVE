@@ -131,6 +131,8 @@ export default function Club(props) {
         location={club.location}
         name={club.name}
         address={club.address}
+        phone={club.phone}
+        email={club.email}
       />
       <ListReviews navigation={navigation} idClub={club.id} />
       <Toast ref={toastRef} position="center" opacity={0.9} />
@@ -158,7 +160,7 @@ function TitleClub(props) {
 }
 
 function ClubInfo(props) {
-  const { location, name, address } = props;
+  const { location, name, address, phone, email } = props;
 
   const listInfo = [
     {
@@ -168,13 +170,13 @@ function ClubInfo(props) {
       action: null,
     },
     {
-      text: "111 222 333",
+      text: phone,
       iconName: "phone",
       iconType: "material-community",
       action: null,
     },
     {
-      text: "email@example.com",
+      text: email,
       iconName: "at",
       iconType: "material-community",
       action: null,

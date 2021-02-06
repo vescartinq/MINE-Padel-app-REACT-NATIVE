@@ -33,7 +33,7 @@ export default function Clubs({ navigation }) {
 
       const resultClubs = [];
       db.collection("clubs")
-        .orderBy("createAt", "asc")
+        .orderBy("createAt", "desc")
         .limit(limitClubs)
         .get()
         .then((response) => {
@@ -54,6 +54,7 @@ export default function Clubs({ navigation }) {
     clubs.length < totalClubs && setIsLoading(true);
 
     db.collection("clubs")
+      .orderBy("createAt", "desc")
       .startAfter(startClubs.data().createAt)
       .limit(limitClubs)
       .get()
