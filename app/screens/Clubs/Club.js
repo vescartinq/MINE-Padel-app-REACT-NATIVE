@@ -212,6 +212,7 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   nameClub: {
+    width: 230,
     fontSize: 20,
     fontWeight: "bold",
   },

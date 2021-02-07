@@ -68,7 +68,7 @@ export default function LoginForm({ toastRef }) {
         }
       />
       <Button
-        title="Sign In"
+        title="Log In"
         containerStyle={styles.btnContainerLogin}
         buttonStyle={styles.btnLogin}
         onPress={onSubmit}
