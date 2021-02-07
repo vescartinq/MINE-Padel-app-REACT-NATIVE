@@ -19,9 +19,14 @@ This app has been created with React-Native, and is built with the following tec
 - ESLINT
 - LODASH
 
+![alt text](https://github.com/vescartinq/MINE-Padel-app-REACT-NATIVE/blob/main/mine-logo1.png?raw=true)
+
 ## 2. Web Example
 You can download the app here : 
 https://expo.io/@vescartinq/projects/mine-padel-app 
+
+Or watch this video to see the app in action:
+https://www.youtube.com/watch?v=9P0i9GHvIAU
 
 ## 3. Technologies
 A list of technologies used within the project:
