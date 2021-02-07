@@ -5,7 +5,6 @@ import { Divider } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-easy-toast";
 import LoginForm from "../../components/Account/LoginForm";
-// import LoginFacebook from "../../components/Account/LoginFacebook";
 
 export default function Login() {
   const toastRef = useRef();
@@ -22,9 +21,6 @@ export default function Login() {
         <CreateAccount />
       </View>
       <Divider style={styles.divider} />
-      <View style={styles.viewContainer}>
-        {/* <LoginFacebook toastRef={toastRef} /> */}
-      </View>
       <Toast ref={toastRef} position="center" opacity={0.9} />
     </ScrollView>
   );

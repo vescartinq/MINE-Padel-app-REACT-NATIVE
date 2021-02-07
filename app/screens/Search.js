@@ -48,9 +48,9 @@ function NoFoundClubs() {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <Image
-        source={require("../../assets/img/no-result-found.png")}
+        source={require("../../assets/img/no-result-found3.png")}
         resizeMode="cover"
-        style={{ width: 200, height: 200 }}
+        style={{ width: 400, height: 200 }}
       />
     </View>
   );

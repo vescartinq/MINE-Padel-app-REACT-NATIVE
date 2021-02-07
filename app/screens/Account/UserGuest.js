@@ -10,7 +10,7 @@ export default function UserGuest() {
   return (
     <ScrollView centerContent={true} style={styles.viewBody}>
       <Image
-        source={require("../../../assets/img/user-guest.jpg")}
+        source={require("../../../assets/img/mine-letras-icono-logo.png")}
         resizeMode="contain"
         style={styles.image}
       />
@@ -25,7 +25,7 @@ export default function UserGuest() {
       </Text>
       <View style={styles.viewBtn}>
         <Button
-          title="Sign In"
+          title="Log In"
           buttonStyle={styles.btnStyle}
           containerStyle={styles.btnContainer}
           onPress={() => navigate("login")}

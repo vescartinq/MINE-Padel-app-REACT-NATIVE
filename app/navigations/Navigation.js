@@ -14,7 +14,7 @@ export default function Navigation() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName="my-clubs"
+        initialRouteName="account"
         tabBarOptions={{
           inactiveTintColor: "#646464",
           activeTintColor: "#00a680",
@@ -24,14 +24,14 @@ export default function Navigation() {
         })}
       >
         <Tab.Screen
+          name="account"
+          component={AccountStack}
+          options={{ title: "My Account" }}
+        />
+        <Tab.Screen
           name="clubs"
           component={ClubsStack}
           options={{ title: "Clubs" }}
-        />
-        <Tab.Screen
-          name="top-clubs"
-          component={TopClubsStack}
-          options={{ title: "Top 5 Clubs" }}
         />
         <Tab.Screen
           name="my-clubs"
@@ -39,14 +39,14 @@ export default function Navigation() {
           options={{ title: "My Clubs" }}
         />
         <Tab.Screen
+          name="top-clubs"
+          component={TopClubsStack}
+          options={{ title: "Top 5 Clubs" }}
+        />   
+        <Tab.Screen
           name="search"
           component={SearchStack}
           options={{ title: "Search" }}
-        />
-        <Tab.Screen
-          name="account"
-          component={AccountStack}
-          options={{ title: "My Account" }}
         />
       </Tab.Navigator>
     </NavigationContainer>
@@ -58,7 +58,7 @@ function screenOptions(route, color) {
 
   switch (route.name) {
     case "clubs":
-      iconName = "compass-outline";
+      iconName = "home-outline";
       break;
     case "my-clubs":
       iconName = "heart-outline";
@@ -70,7 +70,7 @@ function screenOptions(route, color) {
       iconName = "magnify";
       break;
     case "account":
-      iconName = "home-outline";
+      iconName = "account-outline";
       break;
     default:
       break;
